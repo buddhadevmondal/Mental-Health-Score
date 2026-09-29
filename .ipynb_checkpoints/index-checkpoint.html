@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mental Health AI | Score Prediction Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="container topbar__inner">
+      <div class="brand">
+        <span class="brand__logo" aria-hidden="true">🧠</span>
+        <div>
+          <h1 class="brand__name">Mental Health AI</h1>
+          <p class="brand__tag">AI-Powered Mental Health Score Prediction</p>
+        </div>
+      </div>
+      <div id="apiStatus" class="status status--checking" role="status" aria-live="polite">
+        <span class="status__dot"></span><span id="apiStatusText">Checking API…</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <span class="hero__badge">Machine Learning · FastAPI</span>
+        <h2 class="hero__title">Understand Your <span class="gradient-text">Digital Lifestyle</span></h2>
+        <p class="hero__text">
+          This application uses a machine-learning model to estimate a mental health score from
+          lifestyle and social-media-related inputs such as screen time, sleep, study hours and stress level.
+        </p>
+      </div>
+    </section>
+
+    <section class="container layout" id="predict">
+      <!-- FORM -->
+      <form id="predictionForm" class="card form-card" novalidate>
+        <h3 class="card__title">Your Information</h3>
+        <p class="card__sub">Fill in all fields, then run the prediction.</p>
+
+        <fieldset class="group">
+          <legend>👤 Profile</legend>
+          <div class="grid">
+            <div class="field">
+              <label for="age">Age</label>
+              <input type="number" id="age" name="age" min="5" max="100" step="1" placeholder="e.g. 21" required />
+              <small class="hint">5 – 100</small>
+            </div>
+            <div class="field">
+              <label for="gender">Gender</label>
+              <select id="gender" name="gender" required>
+                <option value="" disabled selected>Select gender</option>
+                <option>Male</option><option>Female</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="country">Country</label>
+              <select id="country" name="country" required>
+                <option value="" disabled selected>Select country</option>
+                <option>India</option><option>USA</option><option>Canada</option><option>Australia</option>
+                <option>UK</option><option>Germany</option><option>Mexico</option><option>Turkey</option>
+                <option>France</option><option>Other</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="academic_level">Academic Level</label>
+              <select id="academic_level" name="academic_level" required>
+                <option value="" disabled selected>Select level</option>
+                <option>Undergraduate</option><option>Graduate</option><option>High School</option>
+              </select>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="group">
+          <legend>📱 Social Media Usage</legend>
+          <div class="grid">
+            <div class="field">
+              <label for="most_used_platform">Most Used Platform</label>
+              <select id="most_used_platform" name="most_used_platform" required>
+                <option value="" disabled selected>Select platform</option>
+                <option>Facebook</option><option>LinkedIn</option><option>Instagram</option><option>Snapchat</option>
+                <option>Twitter</option><option>YouTube</option><option>TikTok</option><option>LINE</option>
+                <option>KakaoTalk</option><option>VKontakte</option><option>WhatsApp</option><option>WeChat</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="purpose_of_use">Purpose of Use</label>
+              <select id="purpose_of_use" name="purpose_of_use" required>
+                <option value="" disabled selected>Select purpose</option>
+                <option>Networking</option><option>Education</option><option>Entertainment</option><option>News</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="avg_daily_usage_hours">Avg. Daily Usage (hours)</label>
+              <input type="number" id="avg_daily_usage_hours" name="avg_daily_usage_hours" min="0" max="24" step="0.1" placeholder="e.g. 4.5" required />
+              <small class="hint">0 – 24</small>
+            </div>
+            <div class="field">
+              <label for="daily_unlocks">Daily Phone Unlocks</label>
+              <input type="number" id="daily_unlocks" name="daily_unlocks" min="0" step="1" placeholder="e.g. 30" required />
+              <small class="hint">0 or more</small>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="group">
+          <legend>🌿 Lifestyle</legend>
+          <div class="grid">
+            <div class="field">
+              <label for="study_hours">Study Hours (per day)</label>
+              <input type="number" id="study_hours" name="study_hours" min="0" max="24" step="0.1" placeholder="e.g. 5" required />
+              <small class="hint">0 – 24</small>
+            </div>
+            <div class="field">
+              <label for="physical_activity_hours">Physical Activity (hours)</label>
+              <input type="number" id="physical_activity_hours" name="physical_activity_hours" min="0" max="24" step="0.1" placeholder="e.g. 1" required />
+              <small class="hint">0 – 24</small>
+            </div>
+            <div class="field">
+              <label for="sleep_hours_per_night">Sleep Hours Per Night</label>
+              <input type="number" id="sleep_hours_per_night" name="sleep_hours_per_night" min="0" max="24" step="0.1" placeholder="e.g. 7" required />
+              <small class="hint">0 – 24</small>
+            </div>
+            <div class="field">
+              <label for="stress_level">Stress Level</label>
+              <select id="stress_level" name="stress_level" required>
+                <option value="" disabled selected>Select stress level</option>
+                <option>Low</option><option>Medium</option><option>High</option><option>Very High</option>
+              </select>
+            </div>
+          </div>
+        </fieldset>
+
+        <button type="submit" id="predictBtn" class="btn">Predict Mental Health Score</button>
+      </form>
+
+      <!-- RESULT -->
+      <aside class="result-col" aria-live="polite">
+        <div id="errorBox" class="error-card" role="alert" hidden>
+          <button type="button" id="errorClose" class="error-card__close" aria-label="Dismiss error">×</button>
+          <strong id="errorTitle"></strong>
+          <p id="errorMessage"></p>
+          <ul id="errorList"></ul>
+        </div>
+
+        <div class="card result-card" id="resultCard">
+          <h3 class="card__title">Prediction Result</h3>
+
+          <div class="meter">
+            <svg viewBox="0 0 120 120" class="meter__svg" aria-hidden="true">
+              <defs>
+                <linearGradient id="ringGradient" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#6366f1" />
+                  <stop offset="100%" stop-color="#06b6d4" />
+                </linearGradient>
+              </defs>
+              <circle class="meter__track" cx="60" cy="60" r="52" />
+              <circle class="meter__value" id="meterValue" cx="60" cy="60" r="52" />
+            </svg>
+            <div class="meter__center">
+              <span class="meter__number" id="scoreNumber">--</span>
+            </div>
+          </div>
+
+          <p class="result-label">Predicted Mental Health Score</p>
+          <p class="result-note" id="resultNote">Submit the form to see your prediction here.</p>
+        </div>
+
+        <p class="disclaimer">
+          <strong>Disclaimer:</strong> This prediction is for educational and informational purposes only.
+          It is not a medical diagnosis or a substitute for professional mental-health advice.
+        </p>
+      </aside>
+    </section>
+
+    <section class="container about" id="about">
+      <h3 class="section-title">About This Project</h3>
+      <div class="about__grid">
+        <article class="card about__item"><span>🎯</span><h4>What it does</h4>
+          <p>Takes lifestyle and social-media inputs and returns a predicted mental health score.</p></article>
+        <article class="card about__item"><span>🤖</span><h4>Machine learning</h4>
+          <p>A trained ML model, loaded from a saved file, produces the prediction.</p></article>
+        <article class="card about__item"><span>⚡</span><h4>FastAPI backend</h4>
+          <p>FastAPI exposes the model through a <code>/predict</code> endpoint and validates every request.</p></article>
+        <article class="card about__item"><span>🌐</span><h4>Vanilla JS frontend</h4>
+          <p>Plain JavaScript uses <code>fetch()</code> to send your inputs to the API and display the result.</p></article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>© <span id="year"></span> Mental Health AI · Built with HTML, CSS, JavaScript &amp; FastAPI</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
